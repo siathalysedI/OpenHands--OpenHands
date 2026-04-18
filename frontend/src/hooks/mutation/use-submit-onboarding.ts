@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { openHands } from "#/api/open-hands-axios";
+import { SETTINGS_QUERY_KEYS } from "#/hooks/query/query-keys";
 import { displayErrorToast } from "#/utils/custom-toast-handlers";
 
 type SubmitOnboardingArgs = {
@@ -18,7 +19,7 @@ export const useSubmitOnboarding = () => {
       return { selections };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["settings"] });
+      queryClient.invalidateQueries({ queryKey: SETTINGS_QUERY_KEYS.all });
 
       const finalRedirectUrl = "/";
       // Check if the redirect URL is an external URL (starts with http or https)

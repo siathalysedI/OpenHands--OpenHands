@@ -137,6 +137,8 @@ Frontend:
   - Custom hooks are located in `frontend/src/hooks/query/` and `frontend/src/hooks/mutation/`
   - Query hooks should follow the pattern use[Resource] (e.g., `useConversationSkills`)
   - Mutation hooks should follow the pattern use[Action] (e.g., `useDeleteConversation`)
+  - Settings queries use the canonical `SETTINGS_QUERY_KEYS` helper in `frontend/src/hooks/query/query-keys.ts`; avoid hand-writing `queryKey: ["settings", ...]` arrays so invalidation shapes stay consistent across hooks.
+
   - Architecture rule: UI components → TanStack Query hooks → Data Access Layer (`frontend/src/api`) → API endpoints
 
 VSCode Extension:
