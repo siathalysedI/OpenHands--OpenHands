@@ -23,6 +23,7 @@ from openhands.app_server.user.user_context import UserContext
 from openhands.app_server.utils.dependencies import get_dependencies
 from openhands.integrations.provider import ProviderHandler
 from openhands.integrations.service_types import ProviderType
+from openhands.utils.llm import canonicalize_model_for_ui
 
 _logger = logging.getLogger(__name__)
 
@@ -48,7 +49,9 @@ def _inject_sdk_compat_fields(
     """
     agent_settings = content.get('agent_settings') or {}
     llm = agent_settings.get('llm') or {}
-    model = llm.get('model')
+    model = canonicalize_model_for_ui(llm.get('model'))
+    if model is not None:
+        llm['model'] = model
     content['llm_model'] = model
     content['llm_base_url'] = resolve_provider_llm_base_url(model, llm.get('base_url'))
     if include_api_key:

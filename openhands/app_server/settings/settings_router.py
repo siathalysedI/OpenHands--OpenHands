@@ -31,6 +31,7 @@ from openhands.storage.data_models.settings import Settings
 from openhands.storage.secrets.secrets_store import SecretsStore
 from openhands.storage.settings.settings_store import SettingsStore
 from openhands.utils.llm import (
+    canonicalize_model_for_ui,
     get_provider_api_base,
     is_openhands_model,
     resolve_llm_base_url,
@@ -125,12 +126,11 @@ async def load_settings(
             provider_tokens_set=provider_tokens_set,
         )
 
-        # Convert litellm_proxy/ back to openhands/ for the frontend
+        # Convert internal / bare model ids to the canonical UI-facing form.
         resp_llm = settings_with_token_data.agent_settings.llm
-        if resp_llm.model and resp_llm.model.startswith('litellm_proxy/'):
-            resp_llm.model = (
-                f'openhands/{resp_llm.model.removeprefix("litellm_proxy/")}'
-            )
+        canonical_model = canonicalize_model_for_ui(resp_llm.model)
+        if canonical_model is not None:
+            resp_llm.model = canonical_model
 
         # If the base url matches the default for the provider, we don't send it
         # So that the frontend can display basic mode.
